@@ -1,0 +1,12 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    environment:
+      - CITY=${CITY}
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
+    command: ["python", "main.py"]
