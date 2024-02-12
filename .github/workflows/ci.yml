@@ -24,7 +24,7 @@ jobs:
     - name: Fetch Weather Data
       env:
         WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-        CITY: "Utrecht"
+        CITY: ${{ variables.CITY }}
       run: |
         python your_script_name.py
 
