@@ -26,7 +26,7 @@ jobs:
         WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
         CITY: ${{ variables.CITY }}
       run: |
-        python your_script_name.py
+        python main.py
 
     - name: Commit and push if there are changes
       run: |
