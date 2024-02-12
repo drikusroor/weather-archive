@@ -2,6 +2,7 @@ import os
 import csv
 import requests
 from datetime import datetime
+import urllib.parse
 
 # get from env
 API_KEY = os.environ.get('WEATHER_API_KEY')
@@ -33,6 +34,7 @@ def save_to_csv(data, filename):
     except IOError as e:
         print(f'I/O error: {e}')
 
+
 def main():
 
     for CITY in CITIES.split('\n'):
@@ -42,6 +44,8 @@ def main():
         if weather_data:
             curr_year = datetime.now().year
             filename = f'archive/{CITY}_{curr_year}.csv'
+            filename = urllib.parse.unquote(filename)
+
             save_to_csv(weather_data, filename)
         else:
             print('Failed to fetch weather data for', CITY)
