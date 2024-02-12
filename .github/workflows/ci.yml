@@ -1,0 +1,37 @@
+name: Fetch and Commit Weather Data
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs at the start of every hour
+  workflow_dispatch:
+
+jobs:
+  fetch-and-commit-weather-data:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install requests
+
+    - name: Fetch Weather Data
+      env:
+        WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+        CITY: "Utrecht"
+      run: |
+        python your_script_name.py
+
+    - name: Commit and push if there are changes
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git add -A
+        git commit -m "Updated weather data" -a || echo "No changes to commit"
+        git push
