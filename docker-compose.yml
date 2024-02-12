@@ -7,6 +7,6 @@ services:
     volumes:
       - .:/app
     environment:
-      - CITY=${CITY}
+      - CITIES=${CITIES}
       - WEATHER_API_KEY=${WEATHER_API_KEY}
     command: ["python", "main.py"]
