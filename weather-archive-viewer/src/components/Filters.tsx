@@ -1,7 +1,7 @@
 // src/components/Filters.tsx
 
-import React, { useState } from 'react';
-import { WeatherRecord } from '../types/WeatherData';
+import React, { useState } from "react";
+import { WeatherRecord } from "../types/WeatherData";
 
 interface FiltersProps {
   data: Record<string, WeatherRecord[]>;
@@ -9,29 +9,37 @@ interface FiltersProps {
 }
 
 const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
-  const [minTemp, setMinTemp] = useState<string>('');
-  const [maxTemp, setMaxTemp] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [minTemp, setMinTemp] = useState<string>("");
+  const [maxTemp, setMaxTemp] = useState<string>("");
 
   const applyFilters = () => {
     const filteredData = Object.keys(data).reduce((acc, city) => {
       let cityData = data[city];
 
       if (startDate) {
-        cityData = cityData.filter((record) => record.datetime >= new Date(startDate));
+        cityData = cityData.filter(
+          (record) => record.datetime >= new Date(startDate)
+        );
       }
 
       if (endDate) {
-        cityData = cityData.filter((record) => record.datetime <= new Date(endDate));
+        cityData = cityData.filter(
+          (record) => record.datetime <= new Date(endDate)
+        );
       }
 
       if (minTemp) {
-        cityData = cityData.filter((record) => record.temperature >= parseFloat(minTemp));
+        cityData = cityData.filter(
+          (record) => record.temperature >= parseFloat(minTemp)
+        );
       }
 
       if (maxTemp) {
-        cityData = cityData.filter((record) => record.temperature <= parseFloat(maxTemp));
+        cityData = cityData.filter(
+          (record) => record.temperature <= parseFloat(maxTemp)
+        );
       }
 
       acc[city] = cityData;
@@ -42,9 +50,9 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
   };
 
   return (
-    <div className="mb-4">
-      <h2 className="text-xl font-semibold mb-2">Filters</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="mb-6">
+      <h2 className="text-2xl font-semibold mb-4">Filters</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-gray-700">Start Date:</label>
           <input

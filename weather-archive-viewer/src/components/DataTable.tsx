@@ -1,7 +1,7 @@
 // src/components/DataTable.tsx
 
-import React from 'react';
-import { WeatherRecord } from '../types/WeatherData';
+import React from "react";
+import { WeatherRecord } from "../types/WeatherData";
 
 interface DataTableProps {
   data: Record<string, WeatherRecord[]>;
@@ -11,7 +11,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const dataSource = Object.keys(data).flatMap((city) =>
     data[city].map((record) => ({
       datetime: record.datetime.toLocaleString(),
-      city: city.replace('_', ' '),
+      city: city.replace("_", " "),
       temperature: record.temperature,
       description: record.description,
     }))
@@ -19,9 +19,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-semibold mb-4">Weather Data Table</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse border border-gray-200">
+      <h2 className="text-2xl font-semibold mb-4">Weather Data Table</h2>
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
+        <table className="min-w-full">
           <thead>
             <tr>
               <th className="border border-gray-200 px-4 py-2">Date Time</th>
@@ -36,7 +36,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                 <td className="border border-gray-200 px-4 py-2">
                   {item.datetime}
                 </td>
-                <td className="border border-gray-200 px-4 py-2">{item.city}</td>
+                <td className="border border-gray-200 px-4 py-2">
+                  {item.city}
+                </td>
                 <td className="border border-gray-200 px-4 py-2">
                   {item.temperature}°C
                 </td>
@@ -45,6 +47,14 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                 </td>
               </tr>
             ))}
+
+            {dataSource.length === 0 && (
+              <tr>
+                <td colSpan={4} className="text-center py-4">
+                  No data selected or available.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

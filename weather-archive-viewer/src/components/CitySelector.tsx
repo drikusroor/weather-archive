@@ -24,23 +24,23 @@ const CitySelector: React.FC<CitySelectorProps> = ({ selectedCities, onChange })
   };
 
   return (
-    <div className="mb-4">
-      <h2 className="text-xl font-semibold mb-2">Select Cities:</h2>
-      <div className="flex flex-wrap space-x-4">
-        {cities.map((city) => (
-          <label key={city} className="inline-flex items-center mr-4 mb-2">
-            <input
-              type="checkbox"
-              value={city}
-              checked={selectedCities.includes(city)}
-              onChange={handleCheckboxChange}
-              className="form-checkbox h-5 w-5 text-blue-600"
-            />
-            <span className="ml-2 text-gray-700">{city.replace('_', ' ')}</span>
-          </label>
-        ))}
-      </div>
+    <div className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4">Select Cities:</h2>
+    <div className="flex flex-wrap space-x-4">
+      {cities.map((city) => (
+        <label key={city} className="inline-flex items-center mr-4 mb-2">
+          <input
+            type="checkbox"
+            value={city}
+            checked={selectedCities.includes(city)}
+            onChange={handleCheckboxChange}
+            className="form-checkbox h-5 w-5 text-blue-600"
+          />
+          <span className="ml-2 text-gray-700">{city.replace('_', ' ')}</span>
+        </label>
+      ))}
     </div>
+  </div>
   );
 };
 
