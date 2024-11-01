@@ -46,6 +46,9 @@ def main():
             filename = f'archive/{CITY}_{curr_year}.csv'
             filename = urllib.parse.unquote(filename)
 
+            # sanitize the filename for windows and remove %0D
+            filename = filename.replace('%0D', '')
+
             save_to_csv(weather_data, filename)
         else:
             print('Failed to fetch weather data for', CITY)
