@@ -107,7 +107,7 @@ const App: React.FC = () => {
   return (
     <div className={`${backgroundClass} min-h-screen`}>
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4 text-white">Weather Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-4 text-white drop-shadow">Weather Dashboard</h1>
         <div className="bg-white rounded-lg shadow p-4">
           <CitySelector selectedCities={selectedCities} onChange={setSelectedCities} />
           <Filters data={weatherData} onFilter={setFilteredData} />
