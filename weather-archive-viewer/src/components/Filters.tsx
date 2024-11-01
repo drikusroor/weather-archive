@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { WeatherRecord } from '../types/WeatherData';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import { useDebounce } from '../hooks/useDebounce';
 
 interface FiltersState {
   startDateTimestamp?: number;
@@ -15,6 +16,8 @@ interface FiltersState {
   description?: string;
 }
 
+const DEBOUNCE_DELAY = 300;
+
 interface FiltersProps {
   data: Record<string, WeatherRecord[]>;
   onFilter: (filteredData: Record<string, WeatherRecord[]>) => void;
@@ -22,6 +25,16 @@ interface FiltersProps {
 
 const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
   const [filters, setFilters] = useState<FiltersState>({});
+  const [sliderValues, setSliderValues] = useState<[number, number]>([
+    0,
+    0,
+  ]);
+
+  const debouncedFilters = useDebounce(filters, DEBOUNCE_DELAY);
+
+  useEffect(() => {
+    applyFilters();
+  }, [debouncedFilters, data]);
 
   // Calculate min and max dates
   useEffect(() => {
@@ -40,12 +53,13 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
         startDateTimestamp: prevFilters.startDateTimestamp ?? minDateTimestamp,
         endDateTimestamp: prevFilters.endDateTimestamp ?? maxDateTimestamp,
       }));
+
+      setSliderValues([
+        debouncedFilters.startDateTimestamp ?? minDateTimestamp,
+        debouncedFilters.endDateTimestamp ?? maxDateTimestamp,
+      ]);
     }
   }, [data]);
-
-  useEffect(() => {
-    applyFilters();
-  }, [filters, data]);
 
   const applyFilters = () => {
     const filteredData = Object.keys(data).reduce((acc, city) => {
@@ -79,7 +93,9 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
 
       if (filters.description) {
         cityData = cityData.filter((record) =>
-          record.description.toLowerCase().includes(filters.description!.toLowerCase())
+          record.description
+            .toLowerCase()
+            .includes(filters.description!.toLowerCase())
         );
       }
 
@@ -92,6 +108,11 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
 
   // Handle slider change
   const handleSliderChange = (values: [number, number]) => {
+    setSliderValues(values);
+  };
+
+  // Apply filters after slider change is complete
+  const handleSliderAfterChange = (values: [number, number]) => {
     const [startTimestamp, endTimestamp] = values;
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -109,6 +130,14 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
       ...prevFilters,
       [name]: timestamp,
     }));
+
+    if (name === 'startDateTimestamp' || name === 'endDateTimestamp') {
+      // Update slider values to reflect date input changes
+      setSliderValues([
+        name === 'startDateTimestamp' ? timestamp! : sliderValues[0],
+        name === 'endDateTimestamp' ? timestamp! : sliderValues[1],
+      ]);
+    }
   };
 
   // Handle other input changes (temperature, description)
@@ -131,8 +160,9 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
               range
               min={filters.minDateTimestamp}
               max={filters.maxDateTimestamp}
-              value={[filters.startDateTimestamp!, filters.endDateTimestamp!]}
+              value={sliderValues}
               onChange={handleSliderChange}
+              onAfterChange={handleSliderAfterChange}
               tipFormatter={(value) => new Date(value).toLocaleDateString()}
               trackStyle={[{ backgroundColor: '#3b82f6' }]}
               handleStyle={[
@@ -147,7 +177,9 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
                 className="border border-gray-300 rounded-md p-2"
                 value={
                   filters.startDateTimestamp
-                    ? new Date(filters.startDateTimestamp).toISOString().split('T')[0]
+                    ? new Date(filters.startDateTimestamp)
+                        .toISOString()
+                        .split('T')[0]
                     : ''
                 }
                 onChange={handleDateInputChange}
@@ -158,7 +190,9 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
                 className="border border-gray-300 rounded-md p-2"
                 value={
                   filters.endDateTimestamp
-                    ? new Date(filters.endDateTimestamp).toISOString().split('T')[0]
+                    ? new Date(filters.endDateTimestamp)
+                        .toISOString()
+                        .split('T')[0]
                     : ''
                 }
                 onChange={handleDateInputChange}
