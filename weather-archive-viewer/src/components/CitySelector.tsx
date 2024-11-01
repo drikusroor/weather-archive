@@ -8,7 +8,7 @@ interface CitySelectorProps {
 }
 
 const CitySelector: React.FC<CitySelectorProps> = ({ selectedCities, onChange }) => {
-  const cities = ['Veenendaal', 'Sao_Paulo', 'Utrecht'];
+  const cities = ['Veenendaal', 'Sao Paulo', 'Utrecht'];
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
