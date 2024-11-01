@@ -14,7 +14,7 @@ import { WeatherRecord } from "../types/WeatherData";
 import { aggregateDataByDay } from "../utils/aggregateData";
 import { getWeatherEmoji } from "../utils/weatherEmojis";
 
-const MAX_DATA_POINTS = 500; // Threshold for aggregation
+const MAX_DATA_POINTS = 550; // Threshold for aggregation
 
 interface WeatherChartProps {
   data: Record<string, WeatherRecord[]>;
