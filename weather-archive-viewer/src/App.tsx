@@ -13,6 +13,9 @@ const App: React.FC = () => {
   const [weatherData, setWeatherData] = useState<Record<string, WeatherRecord[]>>({});
   const [filteredData, setFilteredData] = useState<Record<string, WeatherRecord[]>>({});
 
+  // Determine background based on the latest weather description
+  const [backgroundClass, setBackgroundClass] = useState<string>('bg-gradient-to-b from-blue-200 to-blue-500');
+
   // Function to apply filters
   const applyFilters = React.useCallback(
     (data: Record<string, WeatherRecord[]>, filters: FiltersState) => {
@@ -79,16 +82,35 @@ const App: React.FC = () => {
     }
   }, [selectedCities]);
 
+  useEffect(() => {
+    if (selectedCities.length > 0 && weatherData) {
+      const latestRecords = Object.values(weatherData)
+        .flat()
+        .sort((a, b) => b.datetime.getTime() - a.datetime.getTime());
+      if (latestRecords.length > 0) {
+        const latestWeather = latestRecords[0].description.toLowerCase();
+        if (latestWeather.includes('clear')) {
+          setBackgroundClass('bg-gradient-to-b from-blue-200 to-blue-500');
+        } else if (latestWeather.includes('cloud')) {
+          setBackgroundClass('bg-gradient-to-b from-gray-300 to-gray-500');
+        } else if (latestWeather.includes('rain')) {
+          setBackgroundClass('bg-gradient-to-b from-gray-400 to-blue-900');
+        } else {
+          setBackgroundClass('bg-gradient-to-b from-green-200 to-blue-500');
+        }
+      }
+    } else {
+      setBackgroundClass('bg-gradient-to-b from-blue-200 to-blue-500');
+    }
+  }, [weatherData, selectedCities]);
+
   return (
-    <div className="min-h-screen">
+    <div className={`${backgroundClass} min-h-screen`}>
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">Weather Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-4 text-white">Weather Dashboard</h1>
         <div className="bg-white rounded-lg shadow p-4">
           <CitySelector selectedCities={selectedCities} onChange={setSelectedCities} />
-          <Filters
-            data={weatherData}
-            onFilter={setFilteredData}
-          />
+          <Filters data={weatherData} onFilter={setFilteredData} />
           <WeatherChart data={filteredData} />
           <DataTable data={filteredData} />
         </div>
