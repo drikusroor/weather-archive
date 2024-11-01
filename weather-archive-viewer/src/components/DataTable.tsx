@@ -3,6 +3,7 @@
 import React from 'react';
 import { WeatherRecord } from '../types/WeatherData';
 import { FixedSizeList as List } from 'react-window';
+import { getWeatherEmoji } from '../utils/weatherEmojis';
 
 interface DataTableProps {
   data: Record<string, WeatherRecord[]>;
@@ -39,7 +40,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         <div className="truncate">{item.datetime}</div>
         <div className="truncate">{item.city}</div>
         <div className="truncate">{item.temperature}°C</div>
-        <div className="truncate">{item.description}</div>
+        <div className="truncate text-right">{item.description} {getWeatherEmoji(item.description)} </div>
       </div>
     );
   };
