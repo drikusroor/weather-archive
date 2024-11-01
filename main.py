@@ -34,24 +34,27 @@ def save_to_csv(data, filename):
     except IOError as e:
         print(f'I/O error: {e}')
 
-
 def main():
+    # Split and clean the cities - this will handle both \n and \r\n line endings
+    cities = [city.strip() for city in CITIES.splitlines()]
 
-    for CITY in CITIES.split('\n'):
-        URL = make_url(CITY)
+    for city in cities:
+        if not city:  # Skip empty lines
+            continue
+            
+        URL = make_url(city)
         weather_data = fetch_weather_data(URL)
 
         if weather_data:
             curr_year = datetime.now().year
-            filename = f'archive/{CITY}_{curr_year}.csv'
-            filename = urllib.parse.unquote(filename)
-
-            # sanitize the filename for windows and remove %0D
-            filename = filename.replace('%0D', '')
-
+            filename = f'archive/{city}_{curr_year}.csv'
+            
+            # Clean the filename if needed, but shouldn't be necessary now
+            filename = filename.replace('\r', '').replace('\n', '')
+            
             save_to_csv(weather_data, filename)
         else:
-            print('Failed to fetch weather data for', CITY)
+            print('Failed to fetch weather data for', city)
 
 if __name__ == '__main__':
     main()
