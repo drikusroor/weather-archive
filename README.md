@@ -6,6 +6,8 @@ This project downloads and stores weather information for a given place every ho
 | --- | --- | --- | --- |
 | 2024-02-12 21:02:17 | Gemeente Veenendaal | 3.79 | clear sky |
 
+Additionally, the repository contains an additional React app that allows you to view the weather archive data: https://drikusroor.github.io/weather-archive/
+
 ## Project Structure
 
 The project is structured as follows:
@@ -15,6 +17,7 @@ The project is structured as follows:
 - `.github/workflows/ci.yml`: This file defines a GitHub Actions workflow that runs the `main.py` script every hour.
 - `docker-compose.yml`: This file defines a Docker Compose service that runs the `main.py` script.
 - `Dockerfile`: This file defines a Docker image that can be used to run the `main.py` script in a containerized environment.
+- `weather-archive-viewer`: This directory contains the React app that allows you to view, filter & compare the weather data for the cities.
 
 ## Environment Variables
 
@@ -48,6 +51,35 @@ Alternatively, you can use Docker Compose to run the project:
 
 ```sh
 docker-compose up
+```
+
+## Running the weather archive data viewer React app
+
+First, make sure [Bun](https://bun.sh/) is installed.
+
+Then, install the dependencies:
+
+```sh
+cd weather-archive-viewer
+bun install
+```
+
+Run a development server:
+
+```sh
+bun run dev
+```
+
+Build the app:
+
+```sh
+bun run build
+```
+
+Or publish the app to Github Pages (you might want to make sure your repository rights are configured correctly)
+
+```sh
+bun run deploy
 ```
 
 ## License
