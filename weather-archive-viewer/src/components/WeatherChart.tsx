@@ -11,12 +11,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { WeatherRecord } from "../types/WeatherData";
+import { aggregateDataByDay } from "../utils/aggregateData";
+import { getWeatherEmoji } from "../utils/weatherEmojis";
+
+const MAX_DATA_POINTS = 500; // Threshold for aggregation
 
 interface WeatherChartProps {
   data: Record<string, WeatherRecord[]>;
 }
 
 const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
+  const totalDataPoints = Object.values(data).reduce((sum, cityData) => sum + cityData.length, 0);
   const mergedData: { [key: string]: any }[] = [];
 
   // Create a merged data set with temperatures for each city
@@ -33,6 +38,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         mergedData.push({
           datetime: dateTime,
           [city]: record.temperature,
+          description: record.description,
         });
       }
     });
@@ -58,6 +64,11 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
             <YAxis />
             <Tooltip
               labelFormatter={(label) => new Date(label).toLocaleString()}
+              formatter={(value: number, name: string, props: any) => {
+                const record = props.payload;
+                const emoji = getWeatherEmoji(record.description);
+                return [`${value}°C`, `${record.description} ${emoji}`];
+              }}
             />
             <Legend />
             {Object.keys(data).map((city, index) => (

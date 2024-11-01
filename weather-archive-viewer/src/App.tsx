@@ -8,6 +8,7 @@ import WeatherChart from './components/WeatherChart';
 import WeatherScatterChart from './components/WeatherScatterChart';
 import DataTable from './components/DataTable';
 import Filters from './components/Filters';
+import Tabs from './components/Tabs';
 
 const App: React.FC = () => {
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
@@ -112,10 +113,18 @@ const App: React.FC = () => {
         <div className="bg-gray-100 rounded-lg shadow p-4">
           <CitySelector selectedCities={selectedCities} onChange={setSelectedCities} />
           <Filters data={weatherData} onFilter={setFilteredData} />
-          {/* Existing WeatherChart */}
-          <WeatherChart data={filteredData} />
-          {/* New Scatter Chart */}
-          <WeatherScatterChart data={filteredData} />
+          <Tabs
+            tabs={[
+              {
+                name: 'Line Chart',
+                content: <WeatherChart data={filteredData} />,
+              },
+              {
+                name: 'Scatter Chart',
+                content: <WeatherScatterChart data={filteredData} />,
+              },
+            ]}
+          />
           <DataTable data={filteredData} />
         </div>
       </div>
