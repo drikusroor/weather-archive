@@ -1,6 +1,6 @@
 // src/components/WeatherScatterChart.tsx
 
-import React from 'react';
+import React from "react";
 import {
   ScatterChart,
   Scatter,
@@ -10,17 +10,18 @@ import {
   Legend,
   CartesianGrid,
   ResponsiveContainer,
-} from 'recharts';
-import { WeatherRecord } from '../types/WeatherData';
-import { getWeatherEmoji } from '../utils/weatherEmojis';
-import { aggregateDataByDay } from '../utils/aggregateData';
+} from "recharts";
+import { WeatherRecord } from "../types/WeatherData";
+import { getWeatherEmoji } from "../utils/weatherEmojis";
+import { aggregateDataByDay } from "../utils/aggregateData";
+
+const MAX_DATA_POINTS = 550; // Threshold for aggregation
 
 interface WeatherScatterChartProps {
   data: Record<string, WeatherRecord[]>;
 }
 
 const WeatherScatterChart: React.FC<WeatherScatterChartProps> = ({ data }) => {
-  const MAX_DATA_POINTS = 550; // Threshold for aggregation
 
   // Calculate total number of data points
   const totalDataPoints = Object.values(data).reduce(
@@ -29,7 +30,7 @@ const WeatherScatterChart: React.FC<WeatherScatterChartProps> = ({ data }) => {
   );
 
   const cityColors: { [city: string]: string } = {};
-  const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#a83279'];
+  const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff7300", "#a83279"];
   Object.keys(data).forEach((city, index) => {
     cityColors[city] = colors[index % colors.length];
   });
@@ -92,8 +93,8 @@ const WeatherScatterChart: React.FC<WeatherScatterChartProps> = ({ data }) => {
       {/* Optional message about data aggregation */}
       <div className="mb-2 text-sm text-gray-600">
         {totalDataPoints > MAX_DATA_POINTS
-          ? 'Data has been aggregated to daily averages for performance.'
-          : 'Displaying individual data points.'}
+          ? "Data has been aggregated to daily averages for performance."
+          : "Displaying individual data points."}
       </div>
       <div className="bg-white rounded-lg shadow p-4">
         <ResponsiveContainer width="100%" height={400}>
@@ -104,16 +105,16 @@ const WeatherScatterChart: React.FC<WeatherScatterChartProps> = ({ data }) => {
               dataKey="x"
               name="Time"
               tickFormatter={formatXAxis}
-              domain={['dataMin', 'dataMax']}
+              domain={["dataMin", "dataMax"]}
             />
             <YAxis
               type="number"
               dataKey="y"
               name="Temperature (°C)"
-              domain={['auto', 'auto']}
+              domain={["auto", "auto"]}
             />
             <Tooltip
-              cursor={{ strokeDasharray: '3 3' }}
+              cursor={{ strokeDasharray: "3 3" }}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const dataPoint = payload[0].payload;
@@ -136,7 +137,7 @@ const WeatherScatterChart: React.FC<WeatherScatterChartProps> = ({ data }) => {
                         <p>{`Temperature: ${dataPoint.y.toFixed(1)}°C`}</p>
                       )}
                       <p>{`Weather: ${dataPoint.description} ${dataPoint.emoji}`}</p>
-                      <p>{`City: ${dataPoint.city.replace('_', ' ')}`}</p>
+                      <p>{`City: ${dataPoint.city.replace("_", " ")}`}</p>
                     </div>
                   );
                 }
@@ -147,7 +148,7 @@ const WeatherScatterChart: React.FC<WeatherScatterChartProps> = ({ data }) => {
             {scatterData.map((cityData) => (
               <Scatter
                 key={cityData.city}
-                name={cityData.city.replace('_', ' ')}
+                name={cityData.city.replace("_", " ")}
                 data={cityData.data}
                 fill={cityColors[cityData.city]}
                 shape={(props) => (
