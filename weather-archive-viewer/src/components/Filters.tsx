@@ -243,8 +243,8 @@ const Filters: React.FC<FiltersProps> = ({
                   checked={filters.description === description.value}
                   onChange={handleInputChange}
                 />
-                <span className="ml-2 flex items-center gap-1">{description.value} {getWeatherEmoji(description.value)}
-                  <span className="text-xs text-gray-500">{description.amount}</span>
+                <span className="ml-2 flex items-center gap-1">
+                  {description.value} {getWeatherEmoji(description.value)}
                 </span>
               </label>
             ))}
