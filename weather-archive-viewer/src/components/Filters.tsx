@@ -6,6 +6,7 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useDebounce } from "../hooks/useDebounce";
 import { FiltersState } from "../types/FilterState";
+import { getWeatherEmoji } from "../utils/weatherEmojis";
 
 const DEBOUNCE_DELAY = 300;
 
@@ -23,6 +24,7 @@ const Filters: React.FC<FiltersProps> = ({
   setFilters,
 }) => {
   const [sliderValues, setSliderValues] = useState<[number, number]>([0, 0]);
+  const [descriptionValues, setDescriptionValues] = useState<{ value: string; amount: number }[]>([]);
 
   const debouncedFilters = useDebounce(filters, DEBOUNCE_DELAY);
 
@@ -35,6 +37,10 @@ const Filters: React.FC<FiltersProps> = ({
     const allDates = Object.values(data)
       .flat()
       .map((record) => record.datetime.getTime());
+
+    const allDescriptions = Object.values(data)
+      .flat()
+      .map((record) => record.description);
 
     if (allDates.length > 0) {
       const minDate = Math.min(...allDates);
@@ -52,6 +58,16 @@ const Filters: React.FC<FiltersProps> = ({
         debouncedFilters.startDate ?? minDate,
         debouncedFilters.endDate ?? maxDate,
       ]);
+    }
+
+    if (allDescriptions.length > 0) {
+      const uniqueDescriptions = Array.from(new Set(allDescriptions));
+      const descriptionCounts = uniqueDescriptions.map((description) => ({
+        value: description,
+        amount: allDescriptions.filter((d) => d === description).length
+      })).sort((a, b) => b.amount - a.amount);
+
+      setDescriptionValues(descriptionCounts);
     }
   }, [data, debouncedFilters.endDate, debouncedFilters.startDate, setFilters]);
 
@@ -216,14 +232,23 @@ const Filters: React.FC<FiltersProps> = ({
         </div>
         <div className="md:col-span-2">
           <label className="block text-gray-700">Weather Description:</label>
-          <input
-            type="text"
-            name="description"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-            placeholder="e.g., clear sky"
-            value={filters.description || ""}
-            onChange={handleInputChange}
-          />
+          {/* show many checkboxes */}
+          <div className="flex flex-wrap gap-2">
+            {descriptionValues.map((description) => (
+              <label key={description.value} className="flex items-center bg-white rounded-full p-1 px-2">
+                <input
+                  type="checkbox"
+                  name="description"
+                  value={description.value}
+                  checked={filters.description === description.value}
+                  onChange={handleInputChange}
+                />
+                <span className="ml-2 flex items-center gap-1">{description.value} {getWeatherEmoji(description.value)}
+                  <span className="text-xs text-gray-500">{description.amount}</span>
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
     </div>
