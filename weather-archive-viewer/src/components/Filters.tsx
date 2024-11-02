@@ -5,26 +5,20 @@ import { WeatherRecord } from '../types/WeatherData';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { useDebounce } from '../hooks/useDebounce';
+import { FiltersState } from '../types/FilterState';
 
-interface FiltersState {
-  startDate?: number;
-  endDate?: number;
-  minDate?: number;
-  maxDate?: number;
-  minTemp?: string;
-  maxTemp?: string;
-  description?: string;
-}
+
 
 const DEBOUNCE_DELAY = 300;
 
 interface FiltersProps {
   data: Record<string, WeatherRecord[]>;
   onFilter: (filteredData: Record<string, WeatherRecord[]>) => void;
+  filters: FiltersState;
+  setFilters: (filters: FiltersState) => void;
 }
 
-const Filters: React.FC<FiltersProps> = ({ data, onFilter }) => {
-  const [filters, setFilters] = useState<FiltersState>({});
+const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }) => {
   const [sliderValues, setSliderValues] = useState<[number, number]>([
     0,
     0,
