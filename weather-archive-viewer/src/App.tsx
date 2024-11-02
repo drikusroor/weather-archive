@@ -26,6 +26,52 @@ const App: React.FC = () => {
     "bg-gradient-to-b from-blue-200 to-blue-500"
   );
 
+  // Read from URL params on initial load
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const citiesParam = params.get("cities");
+    const filtersParam = params.get("filters");
+
+    if (filtersParam) {
+      try {
+        const filtersObj = JSON.parse(decodeURIComponent(filtersParam));
+
+        delete filtersObj.minDate;
+        delete filtersObj.maxDate;
+
+        setFilters((prevFilters) => ({ ...prevFilters, ...filtersObj }));
+      } catch (e) {
+        console.error("Error parsing filters from URL", e);
+      }
+    }
+
+    if (citiesParam) {
+      const cities = citiesParam.split(",");
+      setSelectedCities(cities);
+    }
+  }, []);
+
+  // Update URL params when selectedCities or filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (selectedCities.length > 0) {
+      params.set("cities", selectedCities.join(","));
+    }
+
+    if (Object.keys(filters).length > 0) {
+
+      const filtersObj = { ...filters };
+      delete filtersObj.minDate;
+      delete filtersObj.maxDate;
+
+      params.set("filters", encodeURIComponent(JSON.stringify(filtersObj)));
+    }
+
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, "", newUrl);
+  }, [selectedCities, filters]);
+
   useEffect(() => {
     const loadData = async () => {
       const dataPromises = selectedCities.map(async (city) => {

@@ -1,13 +1,11 @@
 // src/components/Filters.tsx
 
-import React, { useState, useEffect } from 'react';
-import { WeatherRecord } from '../types/WeatherData';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import { useDebounce } from '../hooks/useDebounce';
-import { FiltersState } from '../types/FilterState';
-
-
+import React, { useState, useEffect } from "react";
+import { WeatherRecord } from "../types/WeatherData";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import { useDebounce } from "../hooks/useDebounce";
+import { FiltersState } from "../types/FilterState";
 
 const DEBOUNCE_DELAY = 300;
 
@@ -18,11 +16,13 @@ interface FiltersProps {
   setFilters: (filters: FiltersState) => void;
 }
 
-const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }) => {
-  const [sliderValues, setSliderValues] = useState<[number, number]>([
-    0,
-    0,
-  ]);
+const Filters: React.FC<FiltersProps> = ({
+  data,
+  onFilter,
+  filters,
+  setFilters,
+}) => {
+  const [sliderValues, setSliderValues] = useState<[number, number]>([0, 0]);
 
   const debouncedFilters = useDebounce(filters, DEBOUNCE_DELAY);
 
@@ -53,7 +53,7 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
         debouncedFilters.endDate ?? maxDate,
       ]);
     }
-  }, [data]);
+  }, [data, debouncedFilters.endDate, debouncedFilters.startDate, setFilters]);
 
   const applyFilters = () => {
     const filteredData = Object.keys(data).reduce((acc, city) => {
@@ -125,11 +125,11 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
       [name]: timestamp,
     }));
 
-    if (name === 'startDate' || name === 'endDate') {
+    if (name === "startDate" || name === "endDate") {
       // Update slider values to reflect date input changes
       setSliderValues([
-        name === 'startDate' ? timestamp! : sliderValues[0],
-        name === 'endDate' ? timestamp! : sliderValues[1],
+        name === "startDate" ? timestamp! : sliderValues[0],
+        name === "endDate" ? timestamp! : sliderValues[1],
       ]);
     }
   };
@@ -148,6 +148,7 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
       {/* Date Range Slider */}
       <div className="mb-4">
         <label className="block text-gray-700 mb-2">Date Range:</label>
+
         {filters.minDate && filters.maxDate && (
           <>
             <Slider
@@ -158,10 +159,10 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
               onChange={handleSliderChange}
               onAfterChange={handleSliderAfterChange}
               tipFormatter={(value) => new Date(value).toLocaleDateString()}
-              trackStyle={[{ backgroundColor: '#3b82f6' }]}
+              trackStyle={[{ backgroundColor: "#3b82f6" }]}
               handleStyle={[
-                { borderColor: '#3b82f6' },
-                { borderColor: '#3b82f6' },
+                { borderColor: "#3b82f6" },
+                { borderColor: "#3b82f6" },
               ]}
             />
             <div className="flex justify-between mt-2">
@@ -171,10 +172,8 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
                 className="border border-gray-300 rounded-md p-2"
                 value={
                   filters.startDate
-                    ? new Date(filters.startDate)
-                        .toISOString()
-                        .split('T')[0]
-                    : ''
+                    ? new Date(filters.startDate).toISOString().split("T")[0]
+                    : ""
                 }
                 onChange={handleDateInputChange}
               />
@@ -184,10 +183,8 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
                 className="border border-gray-300 rounded-md p-2"
                 value={
                   filters.endDate
-                    ? new Date(filters.endDate)
-                        .toISOString()
-                        .split('T')[0]
-                    : ''
+                    ? new Date(filters.endDate).toISOString().split("T")[0]
+                    : ""
                 }
                 onChange={handleDateInputChange}
               />
@@ -203,7 +200,7 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
             type="number"
             name="minTemp"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-            value={filters.minTemp || ''}
+            value={filters.minTemp || ""}
             onChange={handleInputChange}
           />
         </div>
@@ -213,7 +210,7 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
             type="number"
             name="maxTemp"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-            value={filters.maxTemp || ''}
+            value={filters.maxTemp || ""}
             onChange={handleInputChange}
           />
         </div>
@@ -224,7 +221,7 @@ const Filters: React.FC<FiltersProps> = ({ data, onFilter, filters, setFilters }
             name="description"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
             placeholder="e.g., clear sky"
-            value={filters.description || ''}
+            value={filters.description || ""}
             onChange={handleInputChange}
           />
         </div>
