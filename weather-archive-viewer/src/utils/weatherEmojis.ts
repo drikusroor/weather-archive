@@ -6,6 +6,7 @@ export const weatherEmojis: { [key: string]: string } = {
   'scattered clouds': '⛅',
   'broken clouds': '🌥️',
   'shower rain': '🌦️',
+  'drizzle': '🌧️',
   'light intensity drizzle': '🌧️',
   'light rain': '🌧️',
   'moderate rain': '🌧️',
@@ -13,11 +14,13 @@ export const weatherEmojis: { [key: string]: string } = {
   'overcast clouds': '☁️',
   rain: '🌧️',
   thunderstorm: '⛈️',
+  'thunderstorm with rain': '⛈️',
   'thunderstorm with light rain': '⛈️',
   'thunderstorm with heavy rain': '⛈️',
   snow: '❄️',
   'haze': '🌫️',
   mist: '🌫️',
+  'fog': '🌫️',
   'heavy intensity rain': '🌧️',
 };
 
