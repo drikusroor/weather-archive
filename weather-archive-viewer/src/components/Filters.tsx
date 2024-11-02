@@ -173,7 +173,7 @@ const Filters: React.FC<FiltersProps> = ({
               max={filters.maxDate}
               value={sliderValues}
               onChange={handleSliderChange}
-              onAfterChange={handleSliderAfterChange}
+              onChangeComplete={handleSliderAfterChange}
               tipFormatter={(value) => new Date(value).toLocaleDateString()}
               trackStyle={[{ backgroundColor: "#3b82f6" }]}
               handleStyle={[
