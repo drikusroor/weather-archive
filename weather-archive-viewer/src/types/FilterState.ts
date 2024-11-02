@@ -5,5 +5,5 @@ export interface FiltersState {
   maxDate?: number;
   minTemp?: string;
   maxTemp?: string;
-  description?: string;
+  descriptions?: string[];
 }

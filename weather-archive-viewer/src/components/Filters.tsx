@@ -24,7 +24,9 @@ const Filters: React.FC<FiltersProps> = ({
   setFilters,
 }) => {
   const [sliderValues, setSliderValues] = useState<[number, number]>([0, 0]);
-  const [descriptionValues, setDescriptionValues] = useState<{ value: string; amount: number }[]>([]);
+  const [descriptionValues, setDescriptionValues] = useState<
+    { value: string; amount: number }[]
+  >([]);
 
   const debouncedFilters = useDebounce(filters, DEBOUNCE_DELAY);
 
@@ -37,10 +39,6 @@ const Filters: React.FC<FiltersProps> = ({
     const allDates = Object.values(data)
       .flat()
       .map((record) => record.datetime.getTime());
-
-    const allDescriptions = Object.values(data)
-      .flat()
-      .map((record) => record.description);
 
     if (allDates.length > 0) {
       const minDate = Math.min(...allDates);
@@ -60,14 +58,37 @@ const Filters: React.FC<FiltersProps> = ({
       ]);
     }
 
+    const allDescriptions = Object.values(data)
+      .flat()
+      .filter(record => {
+        return (
+          (!debouncedFilters.startDate || record.datetime.getTime() >= debouncedFilters.startDate) &&
+          (!debouncedFilters.endDate || record.datetime.getTime() <= debouncedFilters.endDate)
+        );
+      })
+      .map((record) => record.description);
+
     if (allDescriptions.length > 0) {
       const uniqueDescriptions = Array.from(new Set(allDescriptions));
-      const descriptionCounts = uniqueDescriptions.map((description) => ({
-        value: description,
-        amount: allDescriptions.filter((d) => d === description).length
-      })).sort((a, b) => b.amount - a.amount);
+      const descriptionCounts = uniqueDescriptions
+        .map((description) => ({
+          value: description,
+          amount: allDescriptions.filter((d) => d === description).length,
+        }))
+        .sort((a, b) => b.amount - a.amount);
 
       setDescriptionValues(descriptionCounts);
+
+      // if there are descriptions in the filter that are not in the data, remove them
+      if (filters.descriptions) {
+        const validDescriptions = filters.descriptions.filter((d) =>
+          uniqueDescriptions.includes(d)
+        );
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          descriptions: validDescriptions,
+        }));
+      }
     }
   }, [data, debouncedFilters.endDate, debouncedFilters.startDate, setFilters]);
 
@@ -101,11 +122,9 @@ const Filters: React.FC<FiltersProps> = ({
         );
       }
 
-      if (filters.description) {
+      if (filters.descriptions?.length) {
         cityData = cityData.filter((record) =>
-          record.description
-            .toLowerCase()
-            .includes(filters.description!.toLowerCase())
+          filters.descriptions?.includes(record.description.toLowerCase())
         );
       }
 
@@ -152,6 +171,23 @@ const Filters: React.FC<FiltersProps> = ({
 
   // Handle other input changes (temperature, description)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    if (e.target.name === "description") {
+      const checked = e.target.checked;
+      const description = e.target.value;
+
+      console.log("description", description);
+      console.log("checked", checked);
+
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        descriptions: checked
+          ? [...(prevFilters.descriptions ?? []), description]
+          : prevFilters.descriptions?.filter((d) => d !== description),
+      }));
+      return;
+    }
+
     setFilters({
       ...filters,
       [e.target.name]: e.target.value,
@@ -235,12 +271,15 @@ const Filters: React.FC<FiltersProps> = ({
           {/* show many checkboxes */}
           <div className="flex flex-wrap gap-2">
             {descriptionValues.map((description) => (
-              <label key={description.value} className="flex items-center bg-white rounded-full p-1 px-2">
+              <label
+                key={description.value}
+                className="flex items-center bg-white rounded-full p-1 px-2"
+              >
                 <input
                   type="checkbox"
                   name="description"
                   value={description.value}
-                  checked={filters.description === description.value}
+                  checked={filters.descriptions?.includes(description.value)}
                   onChange={handleInputChange}
                 />
                 <span className="ml-2 flex items-center gap-1">
