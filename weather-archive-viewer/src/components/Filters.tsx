@@ -228,6 +228,39 @@ const Filters: React.FC<FiltersProps> = ({
     setSliderValues([startDate, endDate]);
   };
 
+  // Check if a quick date range is currently active
+  const isQuickRangeActive = (range: 'day' | 'week' | 'month'): boolean => {
+    if (!filters.startDate || !filters.endDate || !filters.maxDate) return false;
+
+    const now = new Date();
+    const currentEndDate = Math.min(filters.maxDate, now.getTime());
+    let expectedStartDate: number;
+
+    switch (range) {
+      case 'day':
+        expectedStartDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).getTime();
+        break;
+      case 'week':
+        expectedStartDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).getTime();
+        break;
+      case 'month':
+        expectedStartDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).getTime();
+        break;
+      default:
+        return false;
+    }
+
+    // Ensure expected start date is not before the minimum available date
+    expectedStartDate = Math.max(expectedStartDate, filters.minDate || expectedStartDate);
+
+    // Check if current selection matches the expected range (with some tolerance for date precision)
+    const tolerance = 24 * 60 * 60 * 1000; // 1 day tolerance
+    return (
+      Math.abs(filters.startDate - expectedStartDate) < tolerance &&
+      Math.abs(filters.endDate - currentEndDate) < tolerance
+    );
+  };
+
   return (
     <div className="mb-6">
       <h2 className="text-2xl font-semibold mb-4">Filters</h2>
@@ -279,19 +312,31 @@ const Filters: React.FC<FiltersProps> = ({
             <div className="flex gap-2 mt-3">
               <button
                 onClick={() => handleQuickDateRange('day')}
-                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                  isQuickRangeActive('day')
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                }`}
               >
                 Last Day
               </button>
               <button
                 onClick={() => handleQuickDateRange('week')}
-                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                  isQuickRangeActive('week')
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                }`}
               >
                 Last Week
               </button>
               <button
                 onClick={() => handleQuickDateRange('month')}
-                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                  isQuickRangeActive('month')
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                }`}
               >
                 Last Month
               </button>
