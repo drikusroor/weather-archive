@@ -273,7 +273,10 @@ const Filters: React.FC<FiltersProps> = ({
             {descriptionValues.map((description) => (
               <label
                 key={description.value}
-                className="flex items-center bg-white rounded-full p-1 px-2"
+                className={`flex items-center bg-white rounded-full p-1 px-2 cursor-pointer shadow-sm hover:bg-blue-100 transition-colors ${filters.descriptions?.includes(description.value)
+                    ? "bg-blue-100 text-blue-800"
+                    : "text-gray-700"
+                  }`}
               >
                 <input
                   type="checkbox"

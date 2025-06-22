@@ -28,7 +28,7 @@ const CitySelector: React.FC<CitySelectorProps> = ({ selectedCities, onChange })
     <h2 className="text-2xl font-semibold mb-4">Select Cities:</h2>
     <div className="flex flex-wrap space-x-4">
       {cities.map((city) => (
-        <label key={city} className="inline-flex items-center mr-4 mb-2">
+        <label key={city} className="inline-flex items-center mr-4 mb-2 cursor-pointer">
           <input
             type="checkbox"
             value={city}
