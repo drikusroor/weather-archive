@@ -4,7 +4,10 @@ import Papa from 'papaparse';
 import { WeatherRecord } from '../types/WeatherData';
 
 export const fetchWeatherData = async (city: string): Promise<WeatherRecord[]> => {
-  const url = `https://raw.githubusercontent.com/drikusroor/weather-archive/main/archive/${city}_2024.csv`;
+
+  const year = new Date().getFullYear();
+
+  const url = `https://raw.githubusercontent.com/drikusroor/weather-archive/main/archive/${city}_${year}.csv`;
 
   const response = await fetch(url);
   const csvText = await response.text();
