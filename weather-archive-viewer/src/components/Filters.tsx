@@ -194,6 +194,40 @@ const Filters: React.FC<FiltersProps> = ({
     });
   };
 
+  // Handle quick date range selection
+  const handleQuickDateRange = (range: 'day' | 'week' | 'month') => {
+    if (!filters.maxDate) return;
+
+    const now = new Date();
+    const endDate = Math.min(filters.maxDate, now.getTime());
+    let startDate: number;
+
+    switch (range) {
+      case 'day':
+        startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).getTime();
+        break;
+      case 'week':
+        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).getTime();
+        break;
+      case 'month':
+        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).getTime();
+        break;
+      default:
+        return;
+    }
+
+    // Ensure startDate is not before the minimum available date
+    startDate = Math.max(startDate, filters.minDate || startDate);
+
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      startDate,
+      endDate,
+    }));
+
+    setSliderValues([startDate, endDate]);
+  };
+
   return (
     <div className="mb-6">
       <h2 className="text-2xl font-semibold mb-4">Filters</h2>
@@ -240,6 +274,27 @@ const Filters: React.FC<FiltersProps> = ({
                 }
                 onChange={handleDateInputChange}
               />
+            </div>
+            {/* Quick Date Range Buttons */}
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={() => handleQuickDateRange('day')}
+                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+              >
+                Last Day
+              </button>
+              <button
+                onClick={() => handleQuickDateRange('week')}
+                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+              >
+                Last Week
+              </button>
+              <button
+                onClick={() => handleQuickDateRange('month')}
+                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+              >
+                Last Month
+              </button>
             </div>
           </>
         )}
