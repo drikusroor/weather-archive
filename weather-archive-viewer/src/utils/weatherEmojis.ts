@@ -22,6 +22,8 @@ export const weatherEmojis: { [key: string]: string } = {
   mist: '🌫️',
   'fog': '🌫️',
   'heavy intensity rain': '🌧️',
+  'heavy snow': '❄️',
+  'light snow': '❄️',
 };
 
 export function getWeatherEmoji(description: string): string {
