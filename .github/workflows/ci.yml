@@ -33,5 +33,5 @@ jobs:
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
         git add -A
-        git commit -m "Updated weather data" -a || echo "No changes to commit"
+        git commit -m "Updated weather data and index" -a || echo "No changes to commit"
         git push
