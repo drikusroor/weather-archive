@@ -18,7 +18,7 @@ export const fetchWeatherData = async (city: string): Promise<WeatherRecord[]> =
   });
 
   const records: WeatherRecord[] = parsedData.data.map((row) => ({
-    datetime: new Date(row[0]),
+    datetime: new Date(row[0].replace(' ', 'T') + 'Z'), // Parse as UTC
     location: row[1],
     temperature: parseFloat(row[2]),
     description: row[3],
