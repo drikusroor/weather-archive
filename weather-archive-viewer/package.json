@@ -11,7 +11,7 @@
     "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.81.2",
+    "@tanstack/react-query": "^5.81.5",
     "caniuse-lite": "^1.0.30001726",
     "papaparse": "^5.4.1",
     "rc-slider": "^11.1.7",
