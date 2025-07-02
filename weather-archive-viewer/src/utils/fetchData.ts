@@ -35,11 +35,12 @@ type WeatherDataIndex = {
 export const fetchWeatherDataIndex = async (): Promise<WeatherDataIndex> => {
 
   const response = await fetch('https://raw.githubusercontent.com/drikusroor/weather-archive/main/archive/index.json');
-  const data = await response.json();
 
   if (!response.ok) {
     throw new Error(`Error fetching weather data index: ${response.statusText}`);
   }
+  
+  const data = await response.json();
 
   if (!data || !data.cities || !data.last_updated) {
     throw new Error('Invalid data format received from index');
