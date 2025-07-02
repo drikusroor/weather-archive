@@ -1,6 +1,9 @@
 {
-    
     "files.autoSave": "afterDelay",
     "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.biome": "explicit"
+    },
+    "biome.configurationPath": "weather-archive-viewer/biome.json",
     "editor.tabSize": 2,
 }
