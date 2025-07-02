@@ -20,8 +20,6 @@ const App: React.FC = () => {
 		Record<string, WeatherRecord[]>
 	>({});
 
-	console.log({ selectedCities, filters, filteredData });
-
 	// We need a useCityWeatherData for every selected city
 	const weatherQueries = useQueries({
 		queries: selectedCities.map((city) => ({
