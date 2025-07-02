@@ -6,6 +6,7 @@ export const weatherEmojis: { [key: string]: string } = {
   'scattered clouds': '⛅',
   'broken clouds': '🌥️',
   'shower rain': '🌦️',
+  'heavy intensity drizzle': '🌧️',
   'drizzle': '🌧️',
   'light intensity drizzle': '🌧️',
   'light rain': '🌧️',
