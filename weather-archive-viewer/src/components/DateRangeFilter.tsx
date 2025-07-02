@@ -60,21 +60,24 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
 
   return (
     <div className="mb-4">
-      <label className="block text-gray-700 mb-2">Date Range:</label>
+
+      <label className="block text-gray-700 mb-2 select-none">Date Range:</label>
       
-      <Slider
-        range
-        min={filters.minDate}
-        max={filters.maxDate}
-        value={sliderValues}
-        onChange={handleSliderChange}
-        onChangeComplete={handleSliderAfterChange}
-        trackStyle={[{ backgroundColor: "#3b82f6" }]}
-        handleStyle={[
-          { borderColor: "#3b82f6" },
-          { borderColor: "#3b82f6" },
-        ]}
-      />
+      <div className="select-none">
+        <Slider
+          range
+          min={filters.minDate}
+          max={filters.maxDate}
+          value={sliderValues}
+          onChange={handleSliderChange}
+          onChangeComplete={handleSliderAfterChange}
+          trackStyle={[{ backgroundColor: "#3b82f6" }]}
+          handleStyle={[
+            { borderColor: "#3b82f6" },
+            { borderColor: "#3b82f6" },
+          ]}
+        />
+      </div>
       
       <div className="flex justify-between mt-2">
         <input
