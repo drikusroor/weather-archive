@@ -1,6 +1,6 @@
 # Weather Archive
 
-This project downloads and stores weather information for a given place every hour. The data is fetched from an external API and stored in CSV files, one for each city. The data is stored in the following format:
+This project downloads and stores weather information for a given place every hour. The data is fetched from an external API ([OpenWeather](https://openweathermap.org/)) and stored in CSV files, one for each city. The data is stored in the following format:
 
 | Date | Location | Temperature | Description |
 | --- | --- | --- | --- |
